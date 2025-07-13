@@ -1,0 +1,10 @@
+fastapi
+python-jose
+passlib[bcrypt]
+requests
+mangum
+pydantic
+starlette
+uvicorn
+boto3
+python-multipart

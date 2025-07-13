@@ -1,14 +1,73 @@
-# Welcome to your CDK TypeScript project
+# StarWars API
 
-This is a blank project for CDK development with TypeScript.
+API criada usando, principalmente:
 
-The `cdk.json` file tells the CDK Toolkit how to execute your app.
+- Python
+- FastAPI  
+- Swagger  
+- AWS Lambda  
+- API Gateway  
+- DynamoDB  
+- S3  
+- CloudWatch  
+- AWS CLI  
+- AWS CDK  
+- Docker  
+- JWT  
+- Clean Architecture
 
-## Useful commands
+## Estrutura do projeto 
+Seguindo os princípios de Clean Architecture:
 
-* `npm run build`   compile typescript to js
-* `npm run watch`   watch for changes and compile
-* `npm run test`    perform the jest unit tests
-* `npx cdk deploy`  deploy this stack to your default AWS account/region
-* `npx cdk diff`    compare deployed stack with current state
-* `npx cdk synth`   emits the synthesized CloudFormation template
+<img src=""/>
+
+## Integração com o DynamoDB
+
+Para registrar novos usuários e testar os níveis de acessos dinamicamente, foi necessário utilizar um banco de dados.
+
+Ao rodar aws dynamodb scan --table-name users --region us-east-1 é possível ter o retorno de todos os usuários registrados, suas senhas em formato hash usando o bcrypt e seus roles.
+
+<img src=""/>
+
+## Deploy
+Após os ajustes de configuração da conta foi feito o deploy usando uma imagem do docker e AWS CDK.
+
+## Após o deploy - CloudWatch
+
+Os logs da API ao irem para a produção puderam ser observados através desa ferramenta de monitoramento e os devidos ajustes foram feitos a medida dos erros apontados nessa plataforma.
+
+## Como usar a api
+
+1- Faça o primeiro login no endpoint /login com:
+
+username: yoda
+
+password: jedi123
+
+Este é o Grão-Mestre Jedi da API (usuário com role master).
+Ele possui acesso total e pode cadastrar novos usuários com os seguintes perfis:
+
+- Padawan: acesso apenas ao endpoint /starwars
+- Grão-Mestre Jedi: acesso aos endpoints /starwars e /register
+
+2 - Copie o token JWT gerado após o login.
+
+3 - Clique em Authorize 🔒 (canto superior da documentação Swagger) e cole o token.
+⚠️ Não é necessário escrever Bearer antes do token.
+
+4 - Acesse o endpoint /starwars para realizar buscas.
+
+👽 Exemplo de uso com a categoria people:
+
+Você pode consultar dados de 4 maneiras:
+
+- ✅ Sem parâmetros: retorna todos os registros da categoria.
+
+- 🔍 Com o parâmetro people preenchido: retorna o personagem exato digitado.
+
+- 🧠 com parâmetros correlacionados à categoria. 
+
+Exemplo:
+
+Pesquisar Millennium Falcon nessa categoria retornaria (Chewbacca, Han Solo, Lando Calrissian e Nien Nunb) que já foram os portadores dessa nave.
+⚙️ Com filtros ordenados de forma crescente(asc) e decrescente(desc), como gender, birth_year, etc.
