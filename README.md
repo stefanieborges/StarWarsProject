@@ -8,18 +8,19 @@ API criada usando, principalmente:
 - AWS Lambda  
 - API Gateway  
 - DynamoDB  
-- S3  
 - CloudWatch  
 - AWS CLI  
 - AWS CDK  
 - Docker  
 - JWT  
 - Clean Architecture
+- Pytest
+- Github Actions
 
 ## Estrutura do projeto 
 Seguindo os princípios de Clean Architecture:
 
-<img src=""/>
+<img src="https://github.com/stefanieborges/StarWarsProject/blob/master/githubImg/EstruturaProjeto.png"/>
 
 ## Integração com o DynamoDB
 
@@ -27,7 +28,7 @@ Para registrar novos usuários e testar os níveis de acessos dinamicamente, foi
 
 Ao rodar aws dynamodb scan --table-name users --region us-east-1 é possível ter o retorno de todos os usuários registrados, suas senhas em formato hash usando o bcrypt e seus roles.
 
-<img src=""/>
+<img src="https://github.com/stefanieborges/StarWarsProject/blob/master/githubImg/SaidaTabelaUsers.png"/>
 
 ## Deploy
 Após os ajustes de configuração da conta foi feito o deploy usando uma imagem do docker e AWS CDK.
@@ -35,6 +36,9 @@ Após os ajustes de configuração da conta foi feito o deploy usando uma imagem
 ## Após o deploy - CloudWatch
 
 Os logs da API ao irem para a produção puderam ser observados através desa ferramenta de monitoramento e os devidos ajustes foram feitos a medida dos erros apontados nessa plataforma.
+
+## Github Actions e Pytest
+Foram feitos teste tanto em ambient Linux e Windows. Acesse o <a href="https://github.com/stefanieborges/StarWarsProject/actions/runs/16248864919">Actions</a>.
 
 ## Como usar a api
 
