@@ -38,7 +38,7 @@ Após os ajustes de configuração da conta foi feito o deploy usando uma imagem
 Os logs da API ao irem para a produção puderam ser observados através dessa ferramenta de monitoramento e os devidos ajustes foram feitos a medida dos erros apontados nessa plataforma.
 
 ## Github Actions e Pytest
-Foram feitos teste tanto em ambient Linux e Windows. Acesse o <a href="https://github.com/stefanieborges/StarWarsProject/actions/runs/16248864919">Actions</a>.
+Foram feitos testes tanto em ambiente Linux quanto em Windows. Acesse o <a href="https://github.com/stefanieborges/StarWarsProject/actions/runs/16248864919">Actions</a>.
 
 ## Como usar a api
 
