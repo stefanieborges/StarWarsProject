@@ -4,8 +4,8 @@ from mangum import Mangum
 from fastapi.responses import HTMLResponse
 import os
 from fastapi.openapi.utils import get_openapi
-from app.controllers.starwars_controller import starwars_router
-from app.controllers.auth_controller import auth_router
+from app.routes.starwars_route import starwars_router
+from app.routes.auth_route import auth_router
 
 IS_AWS = os.environ.get("IS_AWS", "").lower() == "true"
 
@@ -71,89 +71,92 @@ def homepage():
       <head>
         <title>Star Wars API</title>
         <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400..900&family=Press+Start+2P&display=swap" rel="stylesheet">
-        <link rel="icon" type="image/png" href="https://stefanie-starwars-img.s3.us-east-1.amazonaws.com/Star_Wars_Logo.svg.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=ASIAXXIFQRABXFLHVER3%2F20250713%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250713T010109Z&X-Amz-Expires=300&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEPH%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLWVhc3QtMSJHMEUCIQCH60b6k1vu%2Butd8QitY4UDpggJBrZZmIYsicrieUIQAgIgfKwUy8XDXGWToW2cii6Kxq7t304ilzltjXvZAI7mEVUq4AII%2Bv%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARAAGgw1MzA5NzY5MDExMjMiDC4uYmqy7jrTeP%2ByuCq0Ar3IdwRHrxfaVaWT3iBWoiRN9s0URDiRAMHg3C98zJ8FhWiGBmWYIaUMrIjob4u1FdIRLEhPCyoeY1eb6Honpefkv1vllicaW2Gy%2F%2BjvxmDmSAEa0Vz%2FAhjJUulnAdjRtIxuj2YyIIF7VXYrxG0i3dBGjW4ZNpMvndz8PjQgY%2BpVUu2rd0d%2FB3rDBpgfjKj9N2GgGNRemZcqhO8KaARXGO3hiSzl%2Fidjc1o%2BmzU%2BoQVqm0uo%2FXT9yTa3P28L%2B4fC9avbqT4cU75FdNziEK8huVEjT3cUNHaeO8LW0m197Ok%2FWcWE9SfBrpQRieQHjW0k8%2BppPNSptvl3yhG09MtfKo27HIMcVEBnqSL9jIzG2GVHlnJKr4PHHdP6%2B6hMGeFBqUBxYQ2aqWd6t7M6We43LOkXckQZMKXXysMGOq0CIgJi8Z7wjSFbgRehZ511WmI5YX%2BVdAIEDTL8%2B78nsdmfdTthJ5lhKWNUVa0b6LWmSod4E8LNIQ8uLW5OtkPrpKJ8TYMOJhZQfH4D4Ec8GLKcK0PUzPNAYpbEMc6XNhR5AzSqkzGKp2ExNb3p52dAnJxWeAIZTKrGvOJUCn9FsPvNv3HlDkeVUdLmTvqiU153d69CAtrHbCHKczTxs6iCy73N1Z7kxhoTpH8kaenFiSyp%2FvfEOAxO3klxx9kq%2FX18Yc%2FpaFnRNkMcHDMARZpgu%2B%2ByK%2FEf9%2BfdBMhIGbq3Ayzm4GjRVYawJKyBBCkSTeoXIOIx6cKd8BexNWBI%2Fp8kI2VSKQCMknDzIlJPpTBEBLVaXaOdZV%2BdKu0ppcaU2gOZZEE57VJME1eUEVNiQg%3D%3D&X-Amz-Signature=826c026ca1eeb8ed08a28424b861b800fe84d59b921e80967bae23bcbde4a759&X-Amz-SignedHeaders=host&response-content-disposition=inline">
+        <link rel="icon" type="image/png" href="https://stefanie-starwars-img.s3.us-east-1.amazonaws.com/Star_Wars_Logo.svg.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=ASIAXXIFQRABVULKSHM7%2F20250713%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250713T083958Z&X-Amz-Expires=300&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEPn%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLWVhc3QtMSJHMEUCICkobSOIQnR8Nd647ZqQBrcPdRLL1HCPB0NVzMCQ0BDqAiEA%2FzHdX8A7tANh%2FdPk6T87Rl6xemwBee7oFdPivgnb1dcq1gIIEhAAGgw1MzA5NzY5MDExMjMiDMxQWVudGEnsDnwMZyqzAo9det9doHWvsiaabSqjdQssaidAu2qt%2FvH%2F7xnZ5yRVcLRuQlVN%2B232gG44GFAO7nLFjBFX%2BxlJ7k9327Y0IX1ExFyCU3Ebd7w1LfHbKy9tzibNym5LzD9PuW3lWSwZtcK31N%2BkDDZcw0FnM5WKOc1r4KkUf4QL3LlIzLOXGwTIITmIh1y1Tv%2BhsszaUjo6VrLDzrhJFMUpzU1YBcoorgOnxoRreDc5UBoRAA1eZ3bHRBveZiPoly1dktF6XqEO%2FRoGfa3BKtR8FgOpT%2BT%2FX9E%2BD8sq1zlcAWQsHofHeAV%2FuIYLXhOQZqeB8HWkn%2FnBIjD%2FlZAkUWL%2BMxyDoaVGD85EMe6LZRxUrEsEB27iot7EpEkCP3aKQAhGCtbS8JPgHaOUhDRjoAeKf6ULOlHuhAMG124w9ODNwwY6rQIyts6Mw%2FSnbhQtqNmm6Tma6o7k%2FEfIV8TMud0A%2FHAe0QE%2B7520BNw%2Brlb18kxVrde71odQDsy6YS%2F8SOXHlOeDEUPYba%2BAnRJDbjMWbnbHfM7ZdK5CRKsaT3mGM51gYQC4agWvSsyY7bbttuq%2FoGUvLOdxAZFdSJJWiAGDRpPnqPm0V6exblmWtDxQECYIzS8P1wm2UdCf82V0BK09n0QystH3FcRIEAC1yfa3BniLt9FRsR%2FfMbyV1lfQzDVtgEWj%2FBxK0%2BzwMEE4WA%2BqcnRy%2Bbs1mQ%2BqRjtNPBRtnivLLFXlcfPeNuLKuGUc4Cb71CHhRRXnygTQIfJS7DNNjsHtWALvHT9eNANp%2B0vOJsUREE9AiwhYypQ2z7u3dCzOLaFKOsbJsnT5UuajXlUJ&X-Amz-Signature=b580b54e25993ddd3b260f88d4c3accaeac66437f11ebaf83e76d9936a0275ce&X-Amz-SignedHeaders=host&response-content-disposition=inline">
         <style>
-          body {
-            background-color: black;
-            color: yellow;
-            font-family: 'Orbitron', sans-serif;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            text-align: center;
-            padding: 20px;
-          }
-
-          h1 {
-            font-family: 'Press Start 2P', cursive;
-            font-size: 2.2em;
-            margin-bottom: 20px;
-            animation: fadein 4s ease-in-out;
-            color: yellow;
-            text-shadow: 2px 2px 5px #FFD700;
-          }
-
-          p {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 1rem;
-            color: white;
-            max-width: 800px;
-            line-height: 1.6rem;
-            animation: fadein 6s ease-in-out;
-            margin-bottom: 30px;
-          }
-
-          .button-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
-            justify-content: center;
-            animation: fadein 7s ease-in-out;
-          }
-
-          .btn {
-            font-family: 'Press Start 2P', cursive;
-            font-size: 0.8rem;
-            padding: 15px 25px;
-            border: none;
-            border-radius: 10px;
-            text-decoration: none;
-            color: black;
-            cursor: pointer;
-            box-shadow: 0 0 10px white;
-            transition: transform 0.3s ease-in-out;
-          }
-
-          .btn:hover {
-            transform: scale(1.1);
-          }
-
-          /* Cores aleatórias */
-          .doc { background-color: #FFD700; }     /* dourado */
-          .swagger { background-color: #00FFFF; } /* ciano */
-          .github { background-color: #FF69B4; }  /* rosa */
-
-          @keyframes fadein {
-            0% { opacity: 0; transform: translateY(20px); }
-            100% { opacity: 1; transform: translateY(0); }
-          }
+            * {
+              box-sizing: border-box;
+            }
+            
+            html, body {
+              margin: 0;
+              padding: 0;
+              height: 100vh;
+              overflow: hidden;
+              background-color: black;
+              color: yellow;
+              font-family: 'Orbitron', sans-serif;
+              display: flex;
+              flex-direction: column;
+              justify-content: center;
+              align-items: center;
+              text-align: center;
+            }
+        
+            h1 {
+              font-family: 'Press Start 2P', cursive;
+              font-size: 2.2em;
+              margin-bottom: 20px;
+              animation: fadein 4s ease-in-out;
+              color: yellow;
+              text-shadow: 2px 2px 5px #FFD700;
+            }
+            
+            p {
+              font-family: 'Orbitron', sans-serif;
+              font-size: 1rem;
+              color: white;
+              max-width: 800px;
+              line-height: 1.6rem;
+              animation: fadein 6s ease-in-out;
+              margin-bottom: 30px;
+            }
+            
+            .button-container {
+              display: flex;
+              flex-wrap: wrap;
+              gap: 20px;
+              justify-content: center;
+              animation: fadein 7s ease-in-out;
+            }
+            
+            .btn {
+              font-family: 'Press Start 2P', cursive;
+              font-size: 0.8rem;
+              padding: 15px 25px;
+              border: none;
+              border-radius: 10px;
+              text-decoration: none;
+              color: black;
+              cursor: pointer;
+              box-shadow: 0 0 10px white;
+              transition: transform 0.3s ease-in-out;
+            }
+            
+            .btn:hover {
+              transform: scale(1.1);
+            }
+            
+            .doc { background-color: #FFD700; }    
+            .swagger { background-color: #00FFFF; }
+            .github { background-color: #FF69B4; } 
+            
+            @keyframes fadein {
+              0% { opacity: 0; transform: translateY(20px); }
+              100% { opacity: 1; transform: translateY(0); }
+            }
         </style>
       </head>
       <body>
         <h1>StarWars API</h1>
         <p>
           Bem-vindo à minha API desenvolvida para o processo seletivo da <strong>PowerOfData</strong>!<br><br>
-          Com ela, você pode explorar dados da galáxia como <strong>personagens</strong>, <strong>filmes</strong>, <strong>naves</strong> e <strong>planetas</strong>.<br><br>
-          A aplicação utiliza <strong>Python</strong>, <strong>FastAPI</strong>, <strong>AWS Lambda</strong>, <strong>API Gateway</strong> e <strong>DynamoDB</strong>.<br><br>
+          Com ela, você pode explorar dados da franquia galáctia como <strong>personagens</strong>, <strong>filmes</strong>, <strong>naves</strong> e <strong>planetas</strong>.<br><br>
           Comece agora a explorar esses dados… e que a força esteja com todos vocês! 
         </p>
         <div class="button-container">
-          <a href="https://github.com/stefanieborges/StarWarsAPI#readme" target="_blank" class="btn doc">Documentação</a>
+          <a href="https://github.com/stefanieborges/StarWarsProject#readme" target="_blank" class="btn doc">Documentação</a>
           <a href="https://2wvq0kil3b.execute-api.us-east-1.amazonaws.com/prod/docs" target="_blank" class="btn swagger">Swagger</a>
-          <a href="https://github.com/stefanieborges/StarWarsAPI" target="_blank" class="btn github">GitHub</a>
+          <a href="https://github.com/stefanieborges/StarWarsProject" target="_blank" class="btn github">GitHub</a>
         </div>
       </body>
     </html>
